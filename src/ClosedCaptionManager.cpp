@@ -15,8 +15,8 @@ _curText(""),
 _bIsShowing(false),
 _bEnabled(true),
 _yPos(0),
-_xPos(30),
-_padding(10),
+_xPos(50),
+_padding(20),
 _maxCharsPerLine(0) {
     
     ofAddListener(_timer.TIMER_STARTED , this, &ClosedCaptionManager::_onTimerStarted);
@@ -25,8 +25,6 @@ _maxCharsPerLine(0) {
     _timecode.setFPS(59.97);
     
     _font.loadFont("5902.ttf", 48);
-    
-    _yPos = ofGetHeight() - 50;
     
     setMaxCharsPerLine();
 }
@@ -58,7 +56,8 @@ void ClosedCaptionManager::draw() {
     
 //    if (isShowing() &&
 //        isEnabled()) {
-    
+    if (!_curText.empty()) {
+        
         std::string text = _curText;
         int numRows = 0;
     
@@ -81,7 +80,7 @@ void ClosedCaptionManager::draw() {
         _font.drawString(text, _xPos, yPos);
         
         ofPopStyle();
-//    }
+    }
 }
 
 void ClosedCaptionManager::setMaxCharsPerLine() {
@@ -89,12 +88,14 @@ void ClosedCaptionManager::setMaxCharsPerLine() {
     std::string str;
     str.resize(1000, 'T');
     
+    _yPos = ofGetHeight() - ofGetHeight()/7;
+    
     for (int i = 0; i < str.size(); i++) {
         
         std::string sub = str.substr(0, i + 1);
         ofRectangle bounds = _font.getStringBoundingBox(sub, _xPos, _yPos);
-        if (bounds.width > ofGetWidth()) {
-            _maxCharsPerLine = max(i - 1, 0);
+        if (bounds.width >= ofGetWidth()) {
+            _maxCharsPerLine = max(i - 2, 0);
             break;
         }
     }

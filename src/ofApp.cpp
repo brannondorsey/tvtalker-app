@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    ofSetVerticalSync(true);
     ofBackground(0);
     
     ofx::HTTP::BasicJSONRPCServerSettings settings;
@@ -25,13 +26,14 @@ void ofApp::setup(){
     
     server->start();
 
-    std::string filePath = "/Volumes/Untitled/hdhomerun/video/programs/compressed/resolution_640/2014-11-09_WFLDDT_Fox-32-News-at-Nine.mp4";
+    std::string filePath = "/Volumes/Untitled/hdhomerun/video/programs/compressed/2014-11-09_WBBMDT_CBS-2-News-at-10PM.mp4";
     backgroundPlayer.loadMovie(filePath);
     backgroundPlayer.setLoopState(OF_LOOP_NORMAL);
     backgroundPlayer.setVolume(0);
     backgroundPlayer.play();
     
     bRequestPlayVideoMessageRecieved = false;
+    bMouseShowing = true;
     
 }
 
@@ -52,7 +54,7 @@ void ofApp::update(){
         messagePlayer.update();
         
         if (messagePlayer.getIsMovieDone()) {
-            messagePlayer.closeMovie();
+            messagePlayer.close();
         }
     }
     
@@ -73,7 +75,8 @@ void ofApp::draw(){
 void ofApp::loadAndPlayMessageVideo(std::string filePath) {
     
     ofScopedLock lock(mutex);
-    if (messagePlayer.isLoaded()) messagePlayer.closeMovie();
+    if (messagePlayer.isLoaded()) messagePlayer.close();
+    cout << filePath << endl;
     messagePlayer.loadMovie(filePath);
     messagePlayer.setLoopState(OF_LOOP_NONE);
     messagePlayer.play();
@@ -110,8 +113,21 @@ void ofApp::jsonRPCTest(ofx::JSONRPC::MethodArgs& args) {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+
     if (key == ' ') {
+        
         loadAndPlayMessageVideo("/Users/bdorse/Documents/code/hdhomerun/tools/node/data/DocumentRoot/media/video.mov");
+   
+    } else if (key == 'f') {
+        
+        ofToggleFullscreen();
+    
+    } else if (key == 'm') {
+        
+        bMouseShowing = !bMouseShowing;
+        
+        if (bMouseShowing) ofShowCursor();
+        else ofHideCursor();
     }
 }
 

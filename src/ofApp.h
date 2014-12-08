@@ -26,6 +26,7 @@ class ofApp : public ofBaseApp{
         void jsonRPCTest(ofx::JSONRPC::MethodArgs& args);
     
         bool bRequestPlayVideoMessageRecieved;
+        bool bMouseShowing;
     
         std::string videoPath;
     
