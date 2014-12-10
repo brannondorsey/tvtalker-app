@@ -17,10 +17,13 @@ _bEnabled(true),
 _yPos(0),
 _xPos(50),
 _padding(20),
-_maxCharsPerLine(0) {
+_maxCharsPerLine(0),
+_fadeTimeout(3 * 1000){
     
-    ofAddListener(_timer.TIMER_STARTED , this, &ClosedCaptionManager::_onTimerStarted);
-    ofAddListener(_timer.TIMER_COMPLETE , this, &ClosedCaptionManager::_onTimerComplete);
+    ofAddListener(_wordTimer.TIMER_STARTED , this, &ClosedCaptionManager::_onWordTimerStarted);
+    ofAddListener(_wordTimer.TIMER_COMPLETE , this, &ClosedCaptionManager::_onWordTimerComplete);
+    ofAddListener(_fadeTimer.TIMER_STARTED , this, &ClosedCaptionManager::_onFadeTimerStarted);
+    ofAddListener(_fadeTimer.TIMER_COMPLETE , this, &ClosedCaptionManager::_onFadeTimerComplete);
     
     _timecode.setFPS(59.97);
     
@@ -30,8 +33,11 @@ _maxCharsPerLine(0) {
 }
 
 ClosedCaptionManager::~ClosedCaptionManager() {
-    ofAddListener(_timer.TIMER_STARTED , this, &ClosedCaptionManager::_onTimerStarted);
-    ofRemoveListener(_timer.TIMER_COMPLETE, this, &ClosedCaptionManager::_onTimerComplete);
+    
+    ofRemoveListener(_wordTimer.TIMER_STARTED , this, &ClosedCaptionManager::_onWordTimerStarted);
+    ofRemoveListener(_wordTimer.TIMER_COMPLETE, this, &ClosedCaptionManager::_onWordTimerComplete);
+    ofRemoveListener(_fadeTimer.TIMER_STARTED , this, &ClosedCaptionManager::_onFadeTimerStarted);
+    ofRemoveListener(_fadeTimer.TIMER_COMPLETE, this, &ClosedCaptionManager::_onFadeTimerComplete);
 }
 
 void ClosedCaptionManager::setCaptions(Json::Value captions) {
@@ -49,14 +55,15 @@ void ClosedCaptionManager::start() {
 }
 
 void ClosedCaptionManager::update() {
-    _timer.update();
+    _wordTimer.update();
+    _fadeTimer.update();
 }
 
 void ClosedCaptionManager::draw() {
     
-//    if (isShowing() &&
-//        isEnabled()) {
-    if (!_curText.empty()) {
+    if (isShowing() &&
+        isEnabled() &&
+        !_curText.empty()) {
         
         std::string text = _curText;
         int numRows = 0;
@@ -105,6 +112,10 @@ void ClosedCaptionManager::setEnabled(bool enable) {
     _bEnabled = enable;
 }
 
+void ClosedCaptionManager::setFadeTimeout(unsigned long millis) {
+    _fadeTimeout = millis;
+}
+
 bool ClosedCaptionManager::isShowing() {
     return _bIsShowing;
 }
@@ -129,13 +140,15 @@ void ClosedCaptionManager::_step() {
         unsigned long outMillis = _timecode.millisForTimecode(out);
         unsigned long lengthMillis = outMillis - inMillis;
         
-        _timer.setup(lengthMillis);
-        _timer.start(false);
+        _wordTimer.setup(lengthMillis);
+        _wordTimer.start(false);
         
         _counter++;
     
     } else {
-        _bIsShowing = false;
+        
+        _fadeTimer.setup(_fadeTimeout);
+        _fadeTimer.start(false);
     }
 }
 
@@ -146,12 +159,20 @@ void ClosedCaptionManager::_applyPadding(ofRectangle& bounds) {
     bounds.height += _padding * 2;
 }
 
-void ClosedCaptionManager::_onTimerStarted(int &args) {
+void ClosedCaptionManager::_onWordTimerStarted(int &args) {
     
 }
 
-void ClosedCaptionManager::_onTimerComplete(int &args) {
+void ClosedCaptionManager::_onWordTimerComplete(int &args) {
     _step();
+}
+
+void ClosedCaptionManager::_onFadeTimerStarted(int &args) {
+    
+}
+
+void ClosedCaptionManager::_onFadeTimerComplete(int &args) {
+    _bIsShowing = false;
 }
 
 // taken from http://www.cplusplus.com/forum/beginner/132223/

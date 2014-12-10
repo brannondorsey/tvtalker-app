@@ -23,10 +23,10 @@ class ofApp : public ofBaseApp{
     
         void loadAndPlayMessageVideo(std::string filePath);
         void requestPlayVideo(ofx::JSONRPC::MethodArgs& args);
-        void jsonRPCTest(ofx::JSONRPC::MethodArgs& args);
     
         bool bRequestPlayVideoMessageRecieved;
         bool bMouseShowing;
+        bool bMessageVideoPlaying;
     
         std::string videoPath;
     

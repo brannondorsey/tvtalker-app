@@ -25,6 +25,7 @@ public:
     void update();
     void draw();
     void setEnabled(bool enable);
+    void setFadeTimeout(unsigned long millis);
     void setMaxCharsPerLine();
     
     bool isEnabled();
@@ -34,8 +35,10 @@ protected:
     
     void _applyPadding(ofRectangle& bounds);
     void _step();
-    void _onTimerStarted(int& args);
-    void _onTimerComplete(int& args);
+    void _onWordTimerStarted(int& args);
+    void _onWordTimerComplete(int& args);
+    void _onFadeTimerStarted(int& args);
+    void _onFadeTimerComplete(int& args);
     
     std::string _wordWrap(std::string text, unsigned int charsPerLine);
     
@@ -44,12 +47,14 @@ protected:
     int _xPos;
     int _padding;
     int _maxCharsPerLine;
+    unsigned long _fadeTimeout;
     bool _bIsShowing;
     bool _bEnabled;
     std::string _curText;
     Json::Value _closedCaptions;
     ofTrueTypeFont _font;
-    ofxSimpleTimer _timer;
+    ofxSimpleTimer _wordTimer;
+    ofxSimpleTimer _fadeTimer;
     ofxTimecode _timecode;
     
 };
