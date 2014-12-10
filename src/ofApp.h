@@ -4,6 +4,8 @@
 #include "ofxJSONRPC.h"
 #include "ClosedCaptionManager.h"
 
+#define DEBUG
+
 class ofApp : public ofBaseApp{
 
 	public:

@@ -2,7 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
+
+    ofSetFrameRate(60);
     ofSetVerticalSync(true);
     ofBackground(0);
     
@@ -21,7 +22,7 @@ void ofApp::setup(){
     
     server->start();
 
-    std::string filePath = "/Volumes/Untitled/hdhomerun/video/programs/compressed/2014-11-09_WBBMDT_CBS-2-News-at-10PM.mp4";
+    std::string filePath = "/Volumes/Untitled/hdhomerun/video/programs/compressed/resolution_640/2014-11-09_WBBMDT_CBS-2-News-at-10PM.mp4";
     backgroundPlayer.loadMovie(filePath);
     backgroundPlayer.setLoopState(OF_LOOP_NORMAL);
     backgroundPlayer.setVolume(0);
@@ -66,6 +67,10 @@ void ofApp::draw(){
     }
     
     ccManager.draw();
+    
+#ifdef DEBUG
+    ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate(), 0) + " FPS", 20, 20);
+#endif
 }
 
 void ofApp::loadAndPlayMessageVideo(std::string filePath) {
