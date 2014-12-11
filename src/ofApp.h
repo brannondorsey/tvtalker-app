@@ -4,7 +4,7 @@
 #include "ofxJSONRPC.h"
 #include "ClosedCaptionManager.h"
 
-#define DEBUG
+//#define DEBUG
 
 class ofApp : public ofBaseApp{
 
@@ -25,10 +25,13 @@ class ofApp : public ofBaseApp{
     
         void loadAndPlayMessageVideo(std::string filePath);
         void requestPlayVideo(ofx::JSONRPC::MethodArgs& args);
+        void backgroundVideoOn(ofx::JSONRPC::MethodArgs& args);
+        void backgroundVideoOff(ofx::JSONRPC::MethodArgs& args);
     
         bool bRequestPlayVideoMessageRecieved;
         bool bMouseShowing;
         bool bMessageVideoPlaying;
+        bool bDrawBackgroundVideo;
     
         std::string videoPath;
     

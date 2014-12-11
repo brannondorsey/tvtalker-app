@@ -20,6 +20,16 @@ void ofApp::setup(){
                            this,
                            &ofApp::requestPlayVideo);
     
+    server->registerMethod("backgroundVideoOn",
+                           "Display the background video",
+                           this,
+                           &ofApp::backgroundVideoOn);
+    
+    server->registerMethod("backgroundVideoOff",
+                           "Don't display the background video",
+                           this,
+                           &ofApp::backgroundVideoOff);
+    
     server->start();
 
     std::string filePath = "/Volumes/Untitled/hdhomerun/video/programs/compressed/resolution_640/2014-11-09_WBBMDT_CBS-2-News-at-10PM.mp4";
@@ -29,6 +39,7 @@ void ofApp::setup(){
     backgroundPlayer.play();
     
     bRequestPlayVideoMessageRecieved = false;
+    bDrawBackgroundVideo = false;
     bMouseShowing = true;
     
 }
@@ -60,7 +71,9 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    backgroundPlayer.draw(0, 0, ofGetWidth(), ofGetHeight());
+    if (bDrawBackgroundVideo) {
+        backgroundPlayer.draw(0, 0, ofGetWidth(), ofGetHeight());
+    }
     
     if (messagePlayer.isLoaded()) {
         messagePlayer.draw(0, 0, ofGetWidth(), ofGetHeight());
@@ -117,6 +130,14 @@ void ofApp::requestPlayVideo(ofx::JSONRPC::MethodArgs& args) {
         args.error["code"] = 1;
         args.error["message"] = "Missing parameters";
     }
+}
+
+void ofApp::backgroundVideoOn(ofx::JSONRPC::MethodArgs& args) {
+    bDrawBackgroundVideo = true;
+}
+
+void ofApp::backgroundVideoOff(ofx::JSONRPC::MethodArgs& args) {
+    bDrawBackgroundVideo = false;
 }
 
 //--------------------------------------------------------------
