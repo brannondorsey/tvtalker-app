@@ -1,1 +1,9 @@
-ofxThreadedVideo
+ofxSimpleTimer
+ofxTaskQueue
+ofxSSLManager
+ofxMediaType
+ofxIO
+ofxHTTP
+ofxJSON
+ofxJSONRPC
+ofxTimecode
