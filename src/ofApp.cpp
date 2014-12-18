@@ -32,7 +32,7 @@ void ofApp::setup(){
     
     server->start();
 
-    std::string filePath = "/Volumes/Untitled/hdhomerun/video/programs/compressed/resolution_640/2014-11-09_WBBMDT_CBS-2-News-at-10PM.mp4";
+    std::string filePath = "/Volumes/Lexar/nightly_news.mp4";
     backgroundPlayer.loadMovie(filePath);
     backgroundPlayer.setLoopState(OF_LOOP_NORMAL);
     backgroundPlayer.setVolume(0);
